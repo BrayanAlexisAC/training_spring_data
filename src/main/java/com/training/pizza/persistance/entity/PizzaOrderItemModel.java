@@ -1,6 +1,27 @@
 package com.training.pizza.persistance.entity;
 
+import com.training.pizza.persistance.entity.composePK.PizzaOrderItemPK;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Entity
+@Table(name = "pizza_order_item")
+@Getter
+@Setter
+@NoArgsConstructor
 public class PizzaOrderItemModel {
 
-    // we need to create an embedded pk
+    @EmbeddedId
+    private PizzaOrderItemPK composePK;
+
+    @Column(name = "id_item", nullable = false, unique = true)
+    private Integer idItem;
+
+    @Column(nullable = false, columnDefinition = "DECIMAL(2,1)")
+    private Double quantity;
+
+    @Column(nullable = false, columnDefinition = "DECIMAL(5,2)")
+    private Double price;
 }
