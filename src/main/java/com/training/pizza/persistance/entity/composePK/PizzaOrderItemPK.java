@@ -13,10 +13,10 @@ import java.util.Objects;
 @AllArgsConstructor
 public class PizzaOrderItemPK implements Serializable {
 
-    @Column(name = "id_order", nullable = false, unique = true)
+    @Column(name = "id_order", nullable = false)
     private Integer idOrder;
 
-    @Column(name = "id_pizza", nullable = false, unique = true)
+    @Column(name = "id_pizza", nullable = false)
     private Integer idPizza;
 
     @Override

@@ -14,7 +14,7 @@ public class PizzaOrderModel {
     @Column(name = "id_order", nullable = false, unique = true)
     private Integer idOrder;
 
-    @Column(name = "id_customer", nullable = false, unique = true, length = 15)
+    @Column(name = "id_customer", nullable = false, length = 15)
     private String idCustomer;
 
     @Column(nullable = false, columnDefinition = "DATETIME2")

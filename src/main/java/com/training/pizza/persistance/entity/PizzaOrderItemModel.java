@@ -16,7 +16,7 @@ public class PizzaOrderItemModel {
     @EmbeddedId
     private PizzaOrderItemPK composePK;
 
-    @Column(name = "id_item", nullable = false, unique = true)
+    @Column(name = "id_item", nullable = false)
     private Integer idItem;
 
     @Column(nullable = false, columnDefinition = "DECIMAL(2,1)")
