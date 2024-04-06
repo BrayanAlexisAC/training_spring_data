@@ -1,8 +1,8 @@
 package com.training.pizza.web;
 
+import com.training.pizza.CustomExceptions;
 import com.training.pizza.domain.dtos.PizzaDTO;
 import com.training.pizza.domain.services.PizzaService;
-import com.training.pizza.persistance.entity.PizzaModel;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -36,11 +36,16 @@ public class PizzaController {
             @ApiResponse(responseCode = "200", description = "List of all pizzas"),
             @ApiResponse(responseCode = "404", description = "No pizzas found", content = @Content(schema = @Schema()))
     })
+    @ExceptionHandler(CustomExceptions.class)
     public ResponseEntity<List<PizzaDTO>> getAll(
             @Parameter(description = "Flag to retrieve only available pizzas", example = "false") @RequestParam(defaultValue = "false") boolean onlyAvailable
     ){
         List<PizzaDTO> lstPizzas = onlyAvailable ? pizzaService.getAllAvailable() : pizzaService.getAll();
-        return new ResponseEntity<>(lstPizzas, lstPizzas.isEmpty() ? HttpStatus.NOT_FOUND : HttpStatus.ACCEPTED);
+        if (lstPizzas.isEmpty()){
+            throw new CustomExceptions(HttpStatus.NOT_FOUND, "No pizzas found");
+        } else {
+            return new ResponseEntity<>(lstPizzas, HttpStatus.ACCEPTED);
+        }
     }
 
     @GetMapping("/{idPizza}")
@@ -57,7 +62,11 @@ public class PizzaController {
             @Parameter(description = "Pizza Identifier", example = "5") @PathVariable("idPizza") int idPizza
     ){
         PizzaDTO pizza = pizzaService.getById(idPizza);
-        return Objects.nonNull(pizza) ? new ResponseEntity<>(pizza, HttpStatus.ACCEPTED) : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        if (Objects.nonNull(pizza)){
+            return new ResponseEntity<>(pizza, HttpStatus.ACCEPTED);
+        } else {
+            throw new CustomExceptions(HttpStatus.NOT_FOUND, "Pizza not found");
+        }
     }
 
 }
