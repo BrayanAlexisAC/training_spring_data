@@ -18,4 +18,11 @@ public interface PizzaRepository {
      * @return Optional<List>
      */
     Optional<List<PizzaModel>> getAll();
+
+    /**
+     * Get Pizza by ID
+     * @param idPizza int
+     * @return PizzaModel
+     */
+    Optional<PizzaModel> getById(int idPizza);
 }

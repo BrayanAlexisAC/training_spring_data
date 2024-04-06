@@ -18,4 +18,6 @@ public interface PizzaService {
      */
     List<PizzaDTO> getAll();
 
+
+    PizzaDTO getById(int idPizza);
 }

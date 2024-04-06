@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,15 +24,23 @@ public class DefaultPizzaService implements PizzaService {
 
     @Override
     public List<PizzaDTO> getAllAvailable() {
-        ModelMapper mapper = new ModelMapper();
         List<PizzaModel> lstPizzasModel = repository.getAllAvailable().orElse(Collections.emptyList());
-        return lstPizzasModel.stream().map(pizzaModel -> mapper.map(pizzaModel, PizzaDTO.class)).collect(Collectors.toList());
+        return lstPizzasModel.stream().map(pizzaModel -> getMapper().map(pizzaModel, PizzaDTO.class)).collect(Collectors.toList());
     }
 
     @Override
     public List<PizzaDTO> getAll() {
-        ModelMapper mapper = new ModelMapper();
         List<PizzaModel> lstPizzasModel = repository.getAll().orElse(Collections.emptyList());
-        return lstPizzasModel.stream().map(pizzaModel -> mapper.map(pizzaModel, PizzaDTO.class)).collect(Collectors.toList());
+        return lstPizzasModel.stream().map(pizzaModel -> getMapper().map(pizzaModel, PizzaDTO.class)).collect(Collectors.toList());
+    }
+
+    @Override
+    public PizzaDTO getById(int idPizza) {
+        PizzaModel pizzaModel = repository.getById(idPizza).orElse(null);
+        return Objects.nonNull(pizzaModel) ? getMapper().map(pizzaModel, PizzaDTO.class) : null;
+    }
+
+    private ModelMapper getMapper() {
+        return new ModelMapper();
     }
 }

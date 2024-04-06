@@ -34,4 +34,9 @@ public class DefaultPizzaRepository implements PizzaRepository {
     public Optional<List<PizzaModel>> getAll() {
         return Optional.of(crudRepository.findAll());
     }
+
+    @Override
+    public Optional<PizzaModel> getById(int idPizza){
+        return crudRepository.findById(idPizza);
+    }
 }
