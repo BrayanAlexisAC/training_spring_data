@@ -18,6 +18,25 @@ public interface PizzaService {
      */
     List<PizzaDTO> getAll();
 
-
+    /**
+     * Get back a pizza by ID
+     * @param idPizza int
+     * @return
+     */
     PizzaDTO getById(int idPizza);
+
+    /**
+     * Get true if exist pizza with ID or false if not exist
+     * @param idPizza int
+     * @return boolean
+     */
+    boolean exist(int idPizza);
+
+    /**
+     * Save or Update information about izza
+     * @param pizza PizzaDTO
+     * @param exist boolean
+     * @return PizzaDTO
+     */
+    PizzaDTO createAndUpdate(PizzaDTO pizza, boolean exist);
 }

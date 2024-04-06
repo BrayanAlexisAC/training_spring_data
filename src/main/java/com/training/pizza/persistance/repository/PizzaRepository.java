@@ -25,4 +25,18 @@ public interface PizzaRepository {
      * @return PizzaModel
      */
     Optional<PizzaModel> getById(int idPizza);
+
+    /**
+     * Get true if exist pizza or false if not exist
+     * @param idPizza int
+     * @return boolean
+     */
+    boolean existById(int idPizza);
+
+    /**
+     * Save or Update information about PizzaModel
+     * @param pizza PizzaModel
+     * @return PizzaModel
+     */
+    Optional<PizzaModel> save(PizzaModel pizza);
 }

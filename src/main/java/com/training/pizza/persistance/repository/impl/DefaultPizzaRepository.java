@@ -39,4 +39,14 @@ public class DefaultPizzaRepository implements PizzaRepository {
     public Optional<PizzaModel> getById(int idPizza){
         return crudRepository.findById(idPizza);
     }
+
+    @Override
+    public boolean existById(int idPizza) {
+        return crudRepository.existsById(idPizza);
+    }
+
+    @Override
+    public Optional<PizzaModel> save(PizzaModel pizza) {
+        return Optional.of(crudRepository.save(pizza));
+    }
 }

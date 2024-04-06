@@ -34,7 +34,8 @@ public class PizzaController {
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "List of all pizzas"),
-            @ApiResponse(responseCode = "404", description = "No pizzas found", content = @Content(schema = @Schema()))
+            @ApiResponse(responseCode = "404", description = "No pizzas found", content = @Content(schema = @Schema())),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(schema = @Schema()))
     })
     @ExceptionHandler(CustomExceptions.class)
     public ResponseEntity<List<PizzaDTO>> getAll(
@@ -44,7 +45,7 @@ public class PizzaController {
         if (lstPizzas.isEmpty()){
             throw new CustomExceptions(HttpStatus.NOT_FOUND, "No pizzas found");
         } else {
-            return new ResponseEntity<>(lstPizzas, HttpStatus.ACCEPTED);
+            return ResponseEntity.ok(lstPizzas);
         }
     }
 
@@ -56,16 +57,44 @@ public class PizzaController {
     )
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Pizza found"),
-            @ApiResponse(responseCode = "404", description = "Pizza not found", content = @Content(schema = @Schema))
+            @ApiResponse(responseCode = "404", description = "Pizza not found", content = @Content(schema = @Schema)),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(schema = @Schema()))
     })
     public ResponseEntity<PizzaDTO> getById(
             @Parameter(description = "Pizza Identifier", example = "5") @PathVariable("idPizza") int idPizza
     ){
         PizzaDTO pizza = pizzaService.getById(idPizza);
         if (Objects.nonNull(pizza)){
-            return new ResponseEntity<>(pizza, HttpStatus.ACCEPTED);
+            return ResponseEntity.ok(pizza);
         } else {
             throw new CustomExceptions(HttpStatus.NOT_FOUND, "Pizza not found");
+        }
+    }
+
+    @PostMapping("/add")
+    @Operation(
+            summary = "Create a pizza",
+            method = "POST",
+            operationId = "createPizza"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Pizza created successfully"),
+            @ApiResponse(responseCode = "409", description = "Conflict - Pizza already exists", content = @Content(schema = @Schema())),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(schema = @Schema()))
+    })
+    @ExceptionHandler(CustomExceptions.class)
+    public ResponseEntity<PizzaDTO> save(
+            @Parameter(description = "Create a pizza") @RequestBody PizzaDTO pizza
+    ) {
+        if (pizza.getIdPizza() > 0) {
+            boolean pizzaExist = pizzaService.exist(pizza.getIdPizza());
+            if (pizzaExist){
+                return new ResponseEntity<>(pizzaService.createAndUpdate(pizza, true), HttpStatus.CREATED);
+            } else {
+                throw new CustomExceptions(HttpStatus.CONFLICT, "Pizza not exist");
+            }
+        } else {
+            return new ResponseEntity<>(pizzaService.createAndUpdate(pizza, false), HttpStatus.CREATED);
         }
     }
 
