@@ -26,6 +26,7 @@ public class PizzaController {
     @Autowired
     PizzaService pizzaService;
 
+    @ExceptionHandler(CustomExceptions.class) // This annotation works like global Exception for all endpoint in this controller
     @GetMapping("/all")
     @Operation(
             summary = "Get all pizzas",
@@ -37,7 +38,6 @@ public class PizzaController {
             @ApiResponse(responseCode = "404", description = "No pizzas found", content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(schema = @Schema()))
     })
-    @ExceptionHandler(CustomExceptions.class)
     public ResponseEntity<List<PizzaDTO>> getAll(
             @Parameter(description = "Flag to retrieve only available pizzas", example = "false") @RequestParam(defaultValue = "false") boolean onlyAvailable
     ){
@@ -82,7 +82,6 @@ public class PizzaController {
             @ApiResponse(responseCode = "409", description = "Conflict - Pizza already exists", content = @Content(schema = @Schema())),
             @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(schema = @Schema()))
     })
-    @ExceptionHandler(CustomExceptions.class)
     public ResponseEntity<PizzaDTO> save(
             @Parameter(description = "Create a pizza") @RequestBody PizzaDTO pizza
     ) {
