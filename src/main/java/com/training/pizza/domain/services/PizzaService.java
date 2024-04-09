@@ -21,7 +21,7 @@ public interface PizzaService {
     /**
      * Get back a pizza by ID
      * @param idPizza int
-     * @return
+     * @return PizzaDTO
      */
     PizzaDTO getById(int idPizza);
 
