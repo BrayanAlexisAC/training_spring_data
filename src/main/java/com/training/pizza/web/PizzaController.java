@@ -10,11 +10,14 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -22,6 +25,7 @@ import java.util.Objects;
 @RestController
 @RequestMapping("/pizza")
 public class PizzaController {
+    Logger log = LoggerFactory.getLogger(PizzaController.class);
 
     @Autowired
     PizzaService pizzaService;
@@ -95,6 +99,24 @@ public class PizzaController {
         } else {
             return new ResponseEntity<>(pizzaService.createAndUpdate(pizza, false), HttpStatus.CREATED);
         }
+    }
+
+    @DeleteMapping("/delete/{idPizza}")
+    @Operation(
+            summary = "Delete a pizza",
+            method = "DELETE",
+            operationId = "deletePizza"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Pizza deleted successfully"),
+            @ApiResponse(responseCode = "404", description = "Pizza not found", content = @Content(schema = @Schema())),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(schema = @Schema()))
+    })
+    public ResponseEntity<Void> delete(
+            @Parameter(description = "ID of the pizza to delete", required = true) @PathVariable(value = "idPizza") int idPizza
+    ){
+        boolean isDeleted = pizzaService.delete(idPizza);
+        return isDeleted ? ResponseEntity.ok(null) : new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
 }

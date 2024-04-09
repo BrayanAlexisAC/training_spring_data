@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,5 +49,17 @@ public class DefaultPizzaRepository implements PizzaRepository {
     @Override
     public Optional<PizzaModel> save(PizzaModel pizza) {
         return Optional.of(crudRepository.save(pizza));
+    }
+
+    @Override
+    public boolean delete(PizzaModel pizzaModel) {
+        try {
+            crudRepository.delete(pizzaModel);
+            return true;
+        }catch (Exception e){
+            log.error("Error to delete pizza with id: {}, cause: {}, stacktrace: {}",
+                    pizzaModel.getIdPizza(), e.getCause(), Arrays.toString(e.getStackTrace()));
+            return false;
+        }
     }
 }

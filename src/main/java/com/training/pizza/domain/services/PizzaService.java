@@ -39,4 +39,11 @@ public interface PizzaService {
      * @return PizzaDTO
      */
     PizzaDTO createAndUpdate(PizzaDTO pizza, boolean exist);
+
+    /**
+     * Delete Pizza By Id
+     * @param idPizza int
+     * @return boolean
+     */
+    boolean delete(int idPizza);
 }

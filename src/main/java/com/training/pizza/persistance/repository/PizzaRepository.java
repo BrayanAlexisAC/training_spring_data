@@ -39,4 +39,11 @@ public interface PizzaRepository {
      * @return PizzaModel
      */
     Optional<PizzaModel> save(PizzaModel pizza);
+
+    /**
+     * Delete Pizza By Model
+     * @param pizzaModel PizzaModel
+     * @return boolean
+     */
+    boolean delete(PizzaModel pizzaModel);
 }

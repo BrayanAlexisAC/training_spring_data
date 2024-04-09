@@ -58,6 +58,15 @@ public class DefaultPizzaService implements PizzaService {
         return pizza;
     }
 
+    @Override
+    public boolean delete(int idPizza) {
+        PizzaModel pizzaModel = repository.getById(idPizza).orElse(null);
+        if (!Objects.nonNull(pizzaModel))
+            throw new CustomExceptions(HttpStatus.NOT_FOUND, "Pizza with id: " + idPizza + " doesn't exist");
+        return repository.delete(pizzaModel);
+    }
+
+
     private ModelMapper getMapper() {
         return new ModelMapper();
     }
