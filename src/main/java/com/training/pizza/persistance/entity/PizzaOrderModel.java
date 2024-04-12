@@ -1,12 +1,18 @@
 package com.training.pizza.persistance.entity;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
 @Table(name = "pizza_order")
+@Getter
+@Setter
+@NoArgsConstructor
 public class PizzaOrderModel {
 
     @Id

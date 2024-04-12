@@ -19,6 +19,22 @@ public class PizzaOrderItemPK implements Serializable {
     @Column(name = "id_pizza", nullable = false)
     private Integer idPizza;
 
+    public Integer getIdPizza() {
+        return idPizza;
+    }
+
+    public void setIdPizza(Integer idPizza) {
+        this.idPizza = idPizza;
+    }
+
+    public Integer getIdOrder() {
+        return idOrder;
+    }
+
+    public void setIdOrder(Integer idOrder) {
+        this.idOrder = idOrder;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
