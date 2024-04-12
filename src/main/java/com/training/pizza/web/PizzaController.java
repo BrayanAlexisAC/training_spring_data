@@ -49,7 +49,33 @@ public class PizzaController {
         }
     }
 
-    @GetMapping("/{idPizza}")
+    @GetMapping("/all/available")
+    @Operation(
+            summary = "Get all pizzas sorted by price",
+            method = "GET",
+            operationId = "getAllPizzas"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "List of all pizzas"),
+            @ApiResponse(responseCode = "404", description = "No pizzas found", content = @Content(schema = @Schema())),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(schema = @Schema()))
+    })
+    public ResponseEntity<List<PizzaDTO>> getAllAvailableOrderPrice(
+            @Parameter(description = "Flag to retrieve only available pizzas", example = "false") @RequestParam(defaultValue = "false") boolean onlyAvailable
+    ){
+        try {
+            List<PizzaDTO> lstPizzas = pizzaService.getAllAvailableOrderByPrice();
+            if (lstPizzas.isEmpty()){
+                throw new CustomExceptions(HttpStatus.NOT_FOUND, "No pizzas found");
+            } else {
+                return ResponseEntity.ok(lstPizzas);
+            }
+        } catch (CustomExceptions e){
+            throw new CustomExceptions(HttpStatus.INTERNAL_SERVER_ERROR, "Error to get pizzas");
+        }
+    }
+
+    @GetMapping("/id/{idPizza}")
     @Operation(
             summary = "Get pizza by ID",
             method = "GET",

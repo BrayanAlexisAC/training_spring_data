@@ -13,6 +13,12 @@ public interface PizzaService {
     List<PizzaDTO> getAllAvailable();
 
     /**
+     * Get back all available pizzas sorted by price
+     * @return Optional<List>
+     */
+    List<PizzaDTO> getAllAvailableOrderByPrice();
+
+    /**
      * Get back all pizzas
      * @return List<PizzaDTO>
      */

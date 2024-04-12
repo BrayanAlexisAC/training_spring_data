@@ -14,6 +14,12 @@ public interface PizzaRepository {
     Optional<List<PizzaModel>> getAllAvailable();
 
     /**
+     * Get back all available pizzas sorted by price
+     * @return Optional<List>
+     */
+    Optional<List<PizzaModel>> getAllAvailableOrderByPrice();
+
+    /**
      * get back all pizzas
      * @return Optional<List>
      */

@@ -33,6 +33,12 @@ public class DefaultPizzaService implements PizzaService {
     }
 
     @Override
+    public List<PizzaDTO> getAllAvailableOrderByPrice() {
+        List<PizzaModel> lstPizzasModel = repository.getAllAvailableOrderByPrice().orElse(Collections.emptyList());
+        return mapper.toLstPizzaDTO(lstPizzasModel);
+    }
+
+    @Override
     public List<PizzaDTO> getAll() {
         List<PizzaModel> lstPizzasModel = repository.getAll().orElse(Collections.emptyList());
         return mapper.toLstPizzaDTO(lstPizzasModel);

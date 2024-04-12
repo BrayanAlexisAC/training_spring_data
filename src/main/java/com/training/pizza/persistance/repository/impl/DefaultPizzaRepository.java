@@ -32,6 +32,11 @@ public class DefaultPizzaRepository implements PizzaRepository {
     }
 
     @Override
+    public Optional<List<PizzaModel>> getAllAvailableOrderByPrice() {
+        return crudRepository.findAllByAvailableTrueOrderByPrice();
+    }
+
+    @Override
     public Optional<List<PizzaModel>> getAll() {
         return Optional.of(crudRepository.findAll());
     }
