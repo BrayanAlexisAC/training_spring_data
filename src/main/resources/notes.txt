@@ -1,0 +1,10 @@
+#########################################################
+################ Keywords Query Methods #################
+#########################################################
+find: action to search
+all: all elements
+by: condition for some field
+and: add extra condition
+or: other condition
+ignoreCase: ignore if the text is in lowercase or uppercase
+orderBy: sort elements for some field
