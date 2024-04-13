@@ -14,4 +14,10 @@ public interface PizzaCrudRepository extends ListCrudRepository<PizzaModel, Inte
      */
     Optional<List<PizzaModel>> findAllByAvailableTrueOrderByPrice();
 
+    /**
+     * Get back pizza available by name
+     * @param pizzaName String
+     * @return Optional<PizzaModel>
+     */
+    Optional<PizzaModel> findByAvailableTrueAndNameIgnoreCase(String pizzaName);
 }

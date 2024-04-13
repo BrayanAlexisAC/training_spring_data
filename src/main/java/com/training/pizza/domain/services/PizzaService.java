@@ -32,6 +32,13 @@ public interface PizzaService {
     PizzaDTO getById(int idPizza);
 
     /**
+     * Get pizza by name
+     * @param pizzaName String
+     * @return PizzaDTO
+     */
+    PizzaDTO getByName(String pizzaName);
+
+    /**
      * Get true if exist pizza with ID or false if not exist
      * @param idPizza int
      * @return boolean
@@ -52,4 +59,5 @@ public interface PizzaService {
      * @return boolean
      */
     boolean delete(int idPizza);
+
 }

@@ -51,6 +51,12 @@ public class DefaultPizzaService implements PizzaService {
     }
 
     @Override
+    public PizzaDTO getByName(String pizzaName) {
+        PizzaModel pizzaModel = repository.getByName(pizzaName).orElse(null);
+        return Objects.nonNull(pizzaModel) ? mapper.toPizzaDTO(pizzaModel) : null;
+    }
+
+    @Override
     public boolean exist(int idPizza) {
         return repository.existById(idPizza);
     }

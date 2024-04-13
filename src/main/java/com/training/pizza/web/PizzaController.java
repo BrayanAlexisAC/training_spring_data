@@ -97,6 +97,33 @@ public class PizzaController {
         }
     }
 
+    @GetMapping("/name/{pizzaName}")
+    @Operation(
+            summary = "Get pizza by name",
+            method = "GET",
+            operationId = "getPizzaByName"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Pizza found"),
+            @ApiResponse(responseCode = "404", description = "Pizza not found", content = @Content(schema = @Schema())),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(schema = @Schema()))
+    })
+    public ResponseEntity<PizzaDTO> getByName(
+            @Parameter(description = "Pizza Name", example = "Pepperoni")
+            @PathVariable("pizzaName") String pizzaName) {
+        try {
+            PizzaDTO pizza = pizzaService.getByName(pizzaName);
+            if (Objects.nonNull(pizza)) {
+                return ResponseEntity.ok(pizza);
+            } else {
+                throw new CustomExceptions(HttpStatus.NOT_FOUND, "Pizza not found");
+            }
+        } catch (Exception e) {
+            throw new CustomExceptions(HttpStatus.INTERNAL_SERVER_ERROR, "Error to search pizza");
+        }
+    }
+
+
     @PostMapping("/add")
     @Operation(
             summary = "Create a pizza",

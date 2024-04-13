@@ -47,6 +47,11 @@ public class DefaultPizzaRepository implements PizzaRepository {
     }
 
     @Override
+    public Optional<PizzaModel> getByName(String pizzaName) {
+        return crudRepository.findByAvailableTrueAndNameIgnoreCase(pizzaName);
+    }
+
+    @Override
     public boolean existById(int idPizza) {
         return crudRepository.existsById(idPizza);
     }

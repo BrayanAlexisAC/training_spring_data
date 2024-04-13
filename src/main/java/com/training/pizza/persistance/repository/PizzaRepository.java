@@ -33,6 +33,13 @@ public interface PizzaRepository {
     Optional<PizzaModel> getById(int idPizza);
 
     /**
+     * Get pizza by name
+     * @param pizzaName String
+     * @return PizzaModel
+     */
+    Optional<PizzaModel> getByName(String pizzaName);
+
+    /**
      * Get true if exist pizza or false if not exist
      * @param idPizza int
      * @return boolean
@@ -52,4 +59,5 @@ public interface PizzaRepository {
      * @return boolean
      */
     boolean delete(PizzaModel pizzaModel);
+
 }
