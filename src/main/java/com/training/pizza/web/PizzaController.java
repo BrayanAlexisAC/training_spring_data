@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -127,6 +128,7 @@ public class PizzaController {
     @PostMapping("/add")
     @Operation(
             summary = "Create a pizza",
+            description = "If you want to  update a pizza send pizza identifier",
             method = "POST",
             operationId = "createPizza"
     )
@@ -136,7 +138,7 @@ public class PizzaController {
             @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(schema = @Schema()))
     })
     public ResponseEntity<PizzaDTO> save(
-            @Parameter(description = "Create a pizza") @RequestBody PizzaDTO pizza
+            @Parameter(description = "Create a pizza") @Valid @RequestBody PizzaDTO pizza
     ) {
         if (pizza.getIdPizza() > 0) {
             boolean pizzaExist = pizzaService.exist(pizza.getIdPizza());
