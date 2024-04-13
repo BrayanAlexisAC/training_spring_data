@@ -1,5 +1,6 @@
 package com.training.pizza.web;
 
+import com.training.pizza.Constants;
 import com.training.pizza.CustomExceptions;
 import com.training.pizza.domain.dtos.PizzaDTO;
 import com.training.pizza.domain.services.PizzaService;
@@ -44,7 +45,7 @@ public class PizzaController {
     ){
         List<PizzaDTO> lstPizzas = onlyAvailable ? pizzaService.getAllAvailable() : pizzaService.getAll();
         if (lstPizzas.isEmpty()){
-            throw new CustomExceptions(HttpStatus.NOT_FOUND, "No pizzas found");
+            throw new CustomExceptions(HttpStatus.NOT_FOUND, Constants.Pizza.MSG_NO_PIZZAS_FOUND);
         } else {
             return ResponseEntity.ok(lstPizzas);
         }
@@ -67,12 +68,12 @@ public class PizzaController {
         try {
             List<PizzaDTO> lstPizzas = pizzaService.getAllAvailableOrderByPrice();
             if (lstPizzas.isEmpty()){
-                throw new CustomExceptions(HttpStatus.NOT_FOUND, "No pizzas found");
+                throw new CustomExceptions(HttpStatus.NOT_FOUND, Constants.Pizza.MSG_NO_PIZZAS_FOUND);
             } else {
                 return ResponseEntity.ok(lstPizzas);
             }
         } catch (CustomExceptions e){
-            throw new CustomExceptions(HttpStatus.INTERNAL_SERVER_ERROR, "Error to get pizzas");
+            throw new CustomExceptions(HttpStatus.INTERNAL_SERVER_ERROR, Constants.MSG_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -94,7 +95,7 @@ public class PizzaController {
         if (Objects.nonNull(pizza)){
             return ResponseEntity.ok(pizza);
         } else {
-            throw new CustomExceptions(HttpStatus.NOT_FOUND, "Pizza not found");
+            throw new CustomExceptions(HttpStatus.NOT_FOUND, Constants.Pizza.MSG_PIZZA_NOT_FOUND);
         }
     }
 
@@ -117,13 +118,12 @@ public class PizzaController {
             if (Objects.nonNull(pizza)) {
                 return ResponseEntity.ok(pizza);
             } else {
-                throw new CustomExceptions(HttpStatus.NOT_FOUND, "Pizza not found");
+                throw new CustomExceptions(HttpStatus.NOT_FOUND, Constants.Pizza.MSG_PIZZA_NOT_FOUND);
             }
         } catch (Exception e) {
-            throw new CustomExceptions(HttpStatus.INTERNAL_SERVER_ERROR, "Error to search pizza");
+            throw new CustomExceptions(HttpStatus.INTERNAL_SERVER_ERROR, Constants.MSG_INTERNAL_SERVER_ERROR);
         }
     }
-
 
     @PostMapping("/add")
     @Operation(
@@ -145,7 +145,7 @@ public class PizzaController {
             if (pizzaExist){
                 return new ResponseEntity<>(pizzaService.createAndUpdate(pizza, true), HttpStatus.CREATED);
             } else {
-                throw new CustomExceptions(HttpStatus.CONFLICT, "Pizza not exist");
+                throw new CustomExceptions(HttpStatus.CONFLICT, Constants.Pizza.MSG_PIZZA_NOT_FOUND);
             }
         } else {
             return new ResponseEntity<>(pizzaService.createAndUpdate(pizza, false), HttpStatus.CREATED);
