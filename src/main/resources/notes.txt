@@ -8,3 +8,5 @@ and: add extra condition
 or: other condition
 ignoreCase: ignore if the text is in lowercase or uppercase
 orderBy: sort elements for some field
+Contains: field contains a specific element in the chain
+NoContains: field doesn't contain the element in the chain
