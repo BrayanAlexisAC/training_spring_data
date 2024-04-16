@@ -20,4 +20,19 @@ public interface PizzaCrudRepository extends ListCrudRepository<PizzaModel, Inte
      * @return Optional<PizzaModel>
      */
     Optional<PizzaModel> findByAvailableTrueAndNameIgnoreCase(String pizzaName);
+
+    /**
+     * Get back all pizzas that contains word in description
+     * @param word String
+     * @return Optional<List>
+     */
+    Optional<List<PizzaModel>> findAllByAvailableTrueAndDescriptionContainsIgnoreCase(String word);
+
+    /**
+     * Get back all pizzas that not contains word in description
+     * @param word String
+     * @return Optional<List>
+     */
+    Optional<List<PizzaModel>> findAllByAvailableTrueAndDescriptionNotContainsIgnoreCase(String word);
+
 }

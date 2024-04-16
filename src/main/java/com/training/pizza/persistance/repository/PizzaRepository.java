@@ -40,6 +40,20 @@ public interface PizzaRepository {
     Optional<PizzaModel> getByName(String pizzaName);
 
     /**
+     * Get pizza if contains word in description
+     * @param word String
+     * @return Optional
+     */
+    Optional<List<PizzaModel>> getByContainsDescription(String word);
+
+    /**
+     * Get pizza if not contains word in description
+     * @param word String
+     * @return Optional
+     */
+    Optional<List<PizzaModel>> getByNotContainsDescription(String word);
+
+    /**
      * Get true if exist pizza or false if not exist
      * @param idPizza int
      * @return boolean

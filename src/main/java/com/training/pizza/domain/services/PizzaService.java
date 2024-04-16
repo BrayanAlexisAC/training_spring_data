@@ -39,6 +39,14 @@ public interface PizzaService {
     PizzaDTO getByName(String pizzaName);
 
     /**
+     * Get a list of pizzas by description
+     * @param word String
+     * @param isContains boolean
+     * @return List<PizzaDTO>
+     */
+    List<PizzaDTO> getByDescription(String word, boolean isContains);
+
+    /**
      * Get true if exist pizza with ID or false if not exist
      * @param idPizza int
      * @return boolean

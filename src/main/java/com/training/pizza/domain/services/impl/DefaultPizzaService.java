@@ -57,6 +57,14 @@ public class DefaultPizzaService implements PizzaService {
     }
 
     @Override
+    public List<PizzaDTO> getByDescription(String word, boolean isContains) {
+        List<PizzaModel> lstPizzaModel = isContains ?
+                repository.getByContainsDescription(word).orElse(null) :
+                repository.getByNotContainsDescription(word).orElse(null);
+        return mapper.toLstPizzaDTO(lstPizzaModel);
+    }
+
+    @Override
     public boolean exist(int idPizza) {
         return repository.existById(idPizza);
     }

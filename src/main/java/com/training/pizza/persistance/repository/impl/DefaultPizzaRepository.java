@@ -52,6 +52,16 @@ public class DefaultPizzaRepository implements PizzaRepository {
     }
 
     @Override
+    public Optional<List<PizzaModel>> getByContainsDescription(String word) {
+        return crudRepository.findAllByAvailableTrueAndDescriptionContainsIgnoreCase(word);
+    }
+
+    @Override
+    public Optional<List<PizzaModel>> getByNotContainsDescription(String word) {
+        return crudRepository.findAllByAvailableTrueAndDescriptionNotContainsIgnoreCase(word);
+    }
+
+    @Override
     public boolean existById(int idPizza) {
         return crudRepository.existsById(idPizza);
     }

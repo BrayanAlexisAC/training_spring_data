@@ -125,6 +125,36 @@ public class PizzaController {
         }
     }
 
+    @GetMapping("/description/{word}")
+    @Operation(
+            summary = "Get pizzas by description",
+            method = "GET",
+            operationId = "getPizzasByDescription"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "List of pizzas found"),
+            @ApiResponse(responseCode = "404", description = "No pizzas found", content = @Content(schema = @Schema())),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(schema = @Schema()))
+    })
+    public ResponseEntity<List<PizzaDTO>> getByDescription(
+            @Parameter(description = "Word to search in pizza descriptions", example = "Cheese")
+            @PathVariable String word,
+            @Parameter(description = "Flag to indicate if the search should be a partial match", example = "true")
+            @RequestParam boolean isContains) {
+        try{
+            var lstPizzaDTO = pizzaService.getByDescription(word, isContains);
+            if(!lstPizzaDTO.isEmpty()){
+                return ResponseEntity.ok(lstPizzaDTO);
+            } else {
+                throw new CustomExceptions(HttpStatus.NOT_FOUND, Constants.Pizza.MSG_NO_PIZZAS_FOUND);
+            }
+        } catch (Exception e) {
+            throw new CustomExceptions(HttpStatus.INTERNAL_SERVER_ERROR, Constants.MSG_INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
+
     @PostMapping("/add")
     @Operation(
             summary = "Create a pizza",
