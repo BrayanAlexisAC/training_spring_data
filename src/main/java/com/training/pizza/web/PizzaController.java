@@ -171,11 +171,11 @@ public class PizzaController {
     ) {
         if (pizza.getIdPizza() > 0) {
             boolean pizzaExist = pizzaService.exist(pizza.getIdPizza());
-//            if (pizzaExist){
-//                return new ResponseEntity<>(pizzaService.createAndUpdate(pizza, true), HttpStatus.CREATED);
-//            } else {
+            if (pizzaExist){
+                return new ResponseEntity<>(pizzaService.createAndUpdate(pizza, true), HttpStatus.CREATED);
+            } else {
                 throw new ResponseStatusException(HttpStatus.CONFLICT, Constants.Pizza.MSG_PIZZA_NOT_FOUND);
-//            }
+            }
         } else {
             return new ResponseEntity<>(pizzaService.createAndUpdate(pizza, false), HttpStatus.CREATED);
         }
