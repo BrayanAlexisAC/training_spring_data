@@ -1,6 +1,5 @@
 package com.training.pizza.domain.services.impl;
 
-import com.training.pizza.CustomExceptions;
 import com.training.pizza.domain.dtos.PizzaDTO;
 import com.training.pizza.domain.mappers.PizzaMapper;
 import com.training.pizza.domain.services.PizzaService;
@@ -11,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Collections;
 import java.util.List;
@@ -73,7 +73,7 @@ public class DefaultPizzaService implements PizzaService {
     public PizzaDTO createAndUpdate(PizzaDTO pizzaDTO, boolean exist) {
         PizzaModel pizzaModel = repository.save(mapper.toPizzaModel(pizzaDTO)).orElse(null);
         if (!Objects.nonNull(pizzaModel)) {
-            throw new CustomExceptions(HttpStatus.INTERNAL_SERVER_ERROR, "Error to " + (exist ? "updated" : "created") + " pizza");
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error to " + (exist ? "updated" : "created") + " pizza");
         }
         pizzaDTO = mapper.toPizzaDTO(pizzaModel);
         pizzaDTO.setMessage(exist ? "updated" : "created");
@@ -84,7 +84,7 @@ public class DefaultPizzaService implements PizzaService {
     public boolean delete(int idPizza) {
         PizzaModel pizzaModel = repository.getById(idPizza).orElse(null);
         if (!Objects.nonNull(pizzaModel))
-            throw new CustomExceptions(HttpStatus.NOT_FOUND, "Pizza with id: " + idPizza + " doesn't exist");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Pizza with id: " + idPizza + " doesn't exist");
         return repository.delete(pizzaModel);
     }
 }
