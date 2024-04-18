@@ -20,4 +20,9 @@ public class DefaultOrderRepository implements OrderRepository {
         return Optional.of(crudRepository.findAll());
     }
 
+    @Override
+    public Optional<List<PizzaOrderModel>> getByMethod(List<String> lstMethod) {
+        return crudRepository.findAllByMethodIn(lstMethod);
+    }
+
 }

@@ -9,4 +9,9 @@ public class Constants {
         public static final String MSG_NO_PIZZAS_FOUND = "No pizzas found";
     }
 
+    public static class Order {
+
+        public static final String MSG_NO_ORDERS_FOUND = "No orders found";
+    }
+
 }

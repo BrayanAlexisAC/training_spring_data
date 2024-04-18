@@ -13,4 +13,10 @@ public interface OrderRepository {
      */
     Optional<List<PizzaOrderModel>> getAll();
 
+    /**
+     * Get back all orders with methods in list
+     * @param lstMethod List<String>
+     * @return Optional<List>
+     */
+    Optional<List<PizzaOrderModel>> getByMethod(List<String> lstMethod);
 }
