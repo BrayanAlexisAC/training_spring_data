@@ -1,10 +1,12 @@
 package com.training.pizza.domain.dtos;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Null;
 import jakarta.validation.constraints.Positive;
 
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class PizzaDTO {
 
     private int idPizza;

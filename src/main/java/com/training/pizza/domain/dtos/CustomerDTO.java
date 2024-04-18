@@ -1,8 +1,10 @@
 package com.training.pizza.domain.dtos;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class CustomerDTO {
 
     private String idCustomer;

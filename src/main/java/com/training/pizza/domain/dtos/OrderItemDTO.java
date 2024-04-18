@@ -1,7 +1,9 @@
 package com.training.pizza.domain.dtos;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.validation.constraints.Positive;
 
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class OrderItemDTO {
 
     private int idPizza;
