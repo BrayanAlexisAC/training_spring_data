@@ -2,6 +2,7 @@ package com.training.pizza.persistance.repository;
 
 import com.training.pizza.persistance.entity.PizzaOrderModel;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,4 +20,11 @@ public interface OrderRepository {
      * @return Optional<List>
      */
     Optional<List<PizzaOrderModel>> getByMethod(List<String> lstMethod);
+
+    /**
+     * Get back all current orders
+     * @param date LocalDateTime
+     * @return Optional<List>
+     */
+    Optional<List<PizzaOrderModel>> getCurrentOrders(LocalDateTime date);
 }

@@ -19,4 +19,10 @@ public interface OrderService {
      * @return LIst<OrderDTO>
      */
     List<OrderDTO> getByMethod(List<OrderMethod> lstMethods);
+
+    /**
+     * Get Back all current orders
+     * @return List<OrderDTO>
+     */
+    List<OrderDTO> getCurrentOrders();
 }

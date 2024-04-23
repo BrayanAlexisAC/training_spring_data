@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @Tag(name = "Order Controller")
@@ -53,6 +54,32 @@ public class OrderController {
             }
         } catch (Exception e) {
             log.error("Error in service orders/all cause: {}, message: {}, stacktrace: {}",
+                    e.getCause(), e.getMessage(), Arrays.toString(e.getStackTrace()));
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, Constants.MSG_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/all/current")
+    @Operation(
+            summary = "Get today's orders",
+            method = "GET",
+            operationId = "getTodayOrders"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "List of today's pizza orders"),
+            @ApiResponse(responseCode = "204", description = "No content", content = @Content(schema = @Schema)),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(schema = @Schema()))
+    })
+    public ResponseEntity<List<OrderDTO>> getTodayOrders() throws ResponseStatusException {
+        try {
+            var orders = orderService.getCurrentOrders();
+            if (!orders.isEmpty()) {
+                return ResponseEntity.ok(orders);
+            } else {
+                return ResponseEntity.noContent().build();
+            }
+        } catch (Exception e) {
+            log.error("Error in service orders/current cause: {}, message: {}, stacktrace: {}",
                     e.getCause(), e.getMessage(), Arrays.toString(e.getStackTrace()));
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, Constants.MSG_INTERNAL_SERVER_ERROR);
         }
@@ -104,7 +131,7 @@ public class OrderController {
             if (!lstOrderDTO.isEmpty()) {
                 return ResponseEntity.ok(lstOrderDTO);
             } else {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, Constants.Order.MSG_NO_ORDERS_FOUND);
+                return ResponseEntity.noContent().build();
             }
         } catch (Exception e) {
             log.error("Error in service orders/method cause: {}, message: {}, stacktrace: {}",
@@ -112,5 +139,6 @@ public class OrderController {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, Constants.MSG_INTERNAL_SERVER_ERROR);
         }
     }
+
 
 }
