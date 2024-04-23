@@ -1,7 +1,6 @@
 package com.training.pizza.web;
 
 import com.training.pizza.Constants;
-import com.training.pizza.CustomExceptions;
 import com.training.pizza.domain.dtos.OrderDTO;
 import com.training.pizza.domain.enums.OrderMethod;
 import com.training.pizza.domain.services.OrderService;
@@ -19,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Arrays;
 import java.util.List;
@@ -32,7 +32,6 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
 
-    @ExceptionHandler(CustomExceptions.class)
     @GetMapping("/all")
     @Operation(
             summary = "Get all orders",
@@ -48,14 +47,14 @@ public class OrderController {
         try {
             List<OrderDTO> lstOrderDTO = orderService.getAll();
             if (lstOrderDTO.isEmpty()) {
-                throw new CustomExceptions(HttpStatus.NOT_FOUND, Constants.Order.MSG_NO_ORDERS_FOUND);
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, Constants.Order.MSG_NO_ORDERS_FOUND);
             } else {
                 return ResponseEntity.ok(lstOrderDTO);
             }
         } catch (Exception e) {
             log.error("Error in service orders/all cause: {}, message: {}, stacktrace: {}",
                     e.getCause(), e.getMessage(), Arrays.toString(e.getStackTrace()));
-            throw new CustomExceptions(HttpStatus.INTERNAL_SERVER_ERROR, Constants.MSG_INTERNAL_SERVER_ERROR);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, Constants.MSG_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -77,7 +76,7 @@ public class OrderController {
         } catch (Exception e) {
             log.error("Error in service orders/all/methods cause: {}, message: {}, stacktrace: {}",
                     e.getCause(), e.getMessage(), Arrays.toString(e.getStackTrace()));
-            throw new CustomExceptions(HttpStatus.INTERNAL_SERVER_ERROR, Constants.MSG_INTERNAL_SERVER_ERROR);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, Constants.MSG_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -99,18 +98,18 @@ public class OrderController {
         try {
             var availableMethods = OrderMethod.getAllMethods();
             if (!availableMethods.containsAll(lstMethods)){
-                throw new CustomExceptions(HttpStatus.BAD_REQUEST, "Unsupported Methods");
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Unsupported Methods");
             }
             var lstOrderDTO = orderService.getByMethod(lstMethods);
             if (!lstOrderDTO.isEmpty()) {
                 return ResponseEntity.ok(lstOrderDTO);
             } else {
-                throw new CustomExceptions(HttpStatus.NOT_FOUND, Constants.Order.MSG_NO_ORDERS_FOUND);
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, Constants.Order.MSG_NO_ORDERS_FOUND);
             }
         } catch (Exception e) {
             log.error("Error in service orders/method cause: {}, message: {}, stacktrace: {}",
                     e.getCause(), e.getMessage(), Arrays.toString(e.getStackTrace()));
-            throw new CustomExceptions(HttpStatus.INTERNAL_SERVER_ERROR, Constants.MSG_INTERNAL_SERVER_ERROR);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, Constants.MSG_INTERNAL_SERVER_ERROR);
         }
     }
 

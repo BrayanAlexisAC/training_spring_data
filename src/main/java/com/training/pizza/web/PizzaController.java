@@ -1,7 +1,6 @@
 package com.training.pizza.web;
 
 import com.training.pizza.Constants;
-import com.training.pizza.CustomExceptions;
 import com.training.pizza.domain.dtos.PizzaDTO;
 import com.training.pizza.domain.services.PizzaService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -16,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Objects;
@@ -28,7 +28,6 @@ public class PizzaController {
     @Autowired
     PizzaService pizzaService;
 
-    @ExceptionHandler(CustomExceptions.class) // This annotation works like global Exception for all endpoint in this controller
     @GetMapping("/all")
     @Operation(
             summary = "Get all pizzas",
@@ -45,7 +44,7 @@ public class PizzaController {
     ){
         List<PizzaDTO> lstPizzas = onlyAvailable ? pizzaService.getAllAvailable() : pizzaService.getAll();
         if (lstPizzas.isEmpty()){
-            throw new CustomExceptions(HttpStatus.NOT_FOUND, Constants.Pizza.MSG_NO_PIZZAS_FOUND);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, Constants.Pizza.MSG_NO_PIZZAS_FOUND);
         } else {
             return ResponseEntity.ok(lstPizzas);
         }
@@ -68,12 +67,12 @@ public class PizzaController {
         try {
             List<PizzaDTO> lstPizzas = pizzaService.getAllAvailableOrderByPrice();
             if (lstPizzas.isEmpty()){
-                throw new CustomExceptions(HttpStatus.NOT_FOUND, Constants.Pizza.MSG_NO_PIZZAS_FOUND);
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, Constants.Pizza.MSG_NO_PIZZAS_FOUND);
             } else {
                 return ResponseEntity.ok(lstPizzas);
             }
-        } catch (CustomExceptions e){
-            throw new CustomExceptions(HttpStatus.INTERNAL_SERVER_ERROR, Constants.MSG_INTERNAL_SERVER_ERROR);
+        } catch (ResponseStatusException e){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, Constants.MSG_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -95,7 +94,7 @@ public class PizzaController {
         if (Objects.nonNull(pizza)){
             return ResponseEntity.ok(pizza);
         } else {
-            throw new CustomExceptions(HttpStatus.NOT_FOUND, Constants.Pizza.MSG_PIZZA_NOT_FOUND);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, Constants.Pizza.MSG_PIZZA_NOT_FOUND);
         }
     }
 
@@ -118,10 +117,10 @@ public class PizzaController {
             if (Objects.nonNull(pizza)) {
                 return ResponseEntity.ok(pizza);
             } else {
-                throw new CustomExceptions(HttpStatus.NOT_FOUND, Constants.Pizza.MSG_PIZZA_NOT_FOUND);
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, Constants.Pizza.MSG_PIZZA_NOT_FOUND);
             }
         } catch (Exception e) {
-            throw new CustomExceptions(HttpStatus.INTERNAL_SERVER_ERROR, Constants.MSG_INTERNAL_SERVER_ERROR);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, Constants.MSG_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -146,10 +145,10 @@ public class PizzaController {
             if(!lstPizzaDTO.isEmpty()){
                 return ResponseEntity.ok(lstPizzaDTO);
             } else {
-                throw new CustomExceptions(HttpStatus.NOT_FOUND, Constants.Pizza.MSG_NO_PIZZAS_FOUND);
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND, Constants.Pizza.MSG_NO_PIZZAS_FOUND);
             }
         } catch (Exception e) {
-            throw new CustomExceptions(HttpStatus.INTERNAL_SERVER_ERROR, Constants.MSG_INTERNAL_SERVER_ERROR);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, Constants.MSG_INTERNAL_SERVER_ERROR);
         }
 
     }
@@ -175,7 +174,7 @@ public class PizzaController {
             if (pizzaExist){
                 return new ResponseEntity<>(pizzaService.createAndUpdate(pizza, true), HttpStatus.CREATED);
             } else {
-                throw new CustomExceptions(HttpStatus.CONFLICT, Constants.Pizza.MSG_PIZZA_NOT_FOUND);
+                throw new ResponseStatusException(HttpStatus.CONFLICT, Constants.Pizza.MSG_PIZZA_NOT_FOUND);
             }
         } else {
             return new ResponseEntity<>(pizzaService.createAndUpdate(pizza, false), HttpStatus.CREATED);
