@@ -6,6 +6,7 @@ import com.training.pizza.persistance.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -29,6 +30,16 @@ public class DefaultOrderRepository implements OrderRepository {
     @Override
     public Optional<List<PizzaOrderModel>> getCurrentOrders(LocalDateTime date) {
         return crudRepository.findAllByCreatedDateAfter(date);
+    }
+
+    @Override
+    public Optional<List<PizzaOrderModel>> getOrdersBeforeDate(LocalDate date) {
+        return crudRepository.findAllByCreatedDateBefore(date.atTime(0,0));
+    }
+
+    @Override
+    public Optional<List<PizzaOrderModel>> getOrdersByRange(LocalDate firstDate, LocalDate secondDate) {
+        return crudRepository.findAllByCreatedDateBetween(firstDate.atTime(0,0), secondDate.atTime(0,0));
     }
 
 }

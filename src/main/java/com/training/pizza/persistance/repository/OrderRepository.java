@@ -2,6 +2,7 @@ package com.training.pizza.persistance.repository;
 
 import com.training.pizza.persistance.entity.PizzaOrderModel;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -27,4 +28,19 @@ public interface OrderRepository {
      * @return Optional<List>
      */
     Optional<List<PizzaOrderModel>> getCurrentOrders(LocalDateTime date);
+
+    /**
+     * Get back all orders before a date
+     * @param date LocalDate
+     * @return Optional<List>
+     */
+    Optional<List<PizzaOrderModel>> getOrdersBeforeDate(LocalDate date);
+
+    /**
+     * Get Back all orders between two dates
+     * @param firstDate LocalDate
+     * @param secondDate LocalDate
+     * @return Optional<LIst>
+     */
+    Optional<List<PizzaOrderModel>> getOrdersByRange(LocalDate firstDate, LocalDate secondDate);
 }

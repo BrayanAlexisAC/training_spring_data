@@ -20,8 +20,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 @Tag(name = "Order Controller")
@@ -80,6 +80,35 @@ public class OrderController {
             }
         } catch (Exception e) {
             log.error("Error in service orders/current cause: {}, message: {}, stacktrace: {}",
+                    e.getCause(), e.getMessage(), Arrays.toString(e.getStackTrace()));
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, Constants.MSG_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/old")
+    @Operation(
+            summary = "Get old orders",
+            method = "GET",
+            operationId = "getOldOrders"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "List of old orders"),
+            @ApiResponse(responseCode = "204", description = "No content", content = @Content(schema = @Schema)),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(schema = @Schema()))
+    })
+    private ResponseEntity<List<OrderDTO>> getOldOrders(
+            @Parameter(description = "date in format yyyy-MM-dd", example = "2024-04-01") @RequestParam(defaultValue = "#{T(java.time.LocalDate).now()}") LocalDate firstDate,
+            @Parameter(description = "date in format yyyy-MM-dd", example = "2024-04-01") @RequestParam(required = false) LocalDate secondDate
+    ) {
+        try {
+            var orders = orderService.getOldOrders(firstDate, secondDate);
+            if (!orders.isEmpty()) {
+                return ResponseEntity.ok(orders);
+            } else {
+                return ResponseEntity.noContent().build();
+            }
+        } catch (Exception e) {
+            log.error("Error in service orders/old cause: {}, message: {}, stacktrace: {}",
                     e.getCause(), e.getMessage(), Arrays.toString(e.getStackTrace()));
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, Constants.MSG_INTERNAL_SERVER_ERROR);
         }

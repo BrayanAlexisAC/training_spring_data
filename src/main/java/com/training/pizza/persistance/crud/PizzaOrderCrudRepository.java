@@ -22,4 +22,19 @@ public interface PizzaOrderCrudRepository extends ListCrudRepository<PizzaOrderM
      * @return Optional<List>
      */
     Optional<List<PizzaOrderModel>> findAllByCreatedDateAfter(LocalDateTime date);
+
+    /**
+     * Get Back all orders created before a date
+     * @param date LocalDateTime
+     * @return Optional<List>
+     */
+    Optional<List<PizzaOrderModel>> findAllByCreatedDateBefore(LocalDateTime date);
+
+    /**
+     * Get Back all orders between two dates
+     * @param firstDate LocalDateTime
+     * @param secondDate LocalDateTime
+     * @return Optional<List>
+     */
+    Optional<List<PizzaOrderModel>> findAllByCreatedDateBetween(LocalDateTime firstDate, LocalDateTime secondDate);
 }

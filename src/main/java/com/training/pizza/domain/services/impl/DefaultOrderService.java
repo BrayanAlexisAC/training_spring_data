@@ -7,11 +7,15 @@ import com.training.pizza.domain.services.OrderService;
 import com.training.pizza.persistance.entity.PizzaOrderModel;
 import com.training.pizza.persistance.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -40,6 +44,22 @@ public class DefaultOrderService implements OrderService {
     public List<OrderDTO> getCurrentOrders() {
         var date = LocalDateTime.now();
         var lstOrdersModel = orderRepository.getCurrentOrders(date).orElse(Collections.emptyList());
+        return mapper.toLstOrderDTO(lstOrdersModel);
+    }
+
+    @Override
+    public List<OrderDTO> getOldOrders(LocalDate firstDate, LocalDate secondDate) {
+        if (!Objects.nonNull(firstDate)){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "First Date cannot be null");
+        }
+
+        List<PizzaOrderModel> lstOrdersModel;
+        if (Objects.nonNull(secondDate)){
+            lstOrdersModel = orderRepository.getOrdersByRange(firstDate, secondDate).orElse(Collections.emptyList());
+        } else {
+            lstOrdersModel = orderRepository.getOrdersBeforeDate(firstDate).orElse(Collections.emptyList());
+        }
+
         return mapper.toLstOrderDTO(lstOrdersModel);
     }
 
