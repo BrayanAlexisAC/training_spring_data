@@ -67,7 +67,7 @@ public class PizzaController {
         try {
             List<PizzaDTO> lstPizzas = pizzaService.getAllAvailableOrderByPrice();
             if (lstPizzas.isEmpty()){
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, Constants.Pizza.MSG_NO_PIZZAS_FOUND);
+                return ResponseEntity.noContent().build();
             } else {
                 return ResponseEntity.ok(lstPizzas);
             }
@@ -117,7 +117,7 @@ public class PizzaController {
             if (Objects.nonNull(pizza)) {
                 return ResponseEntity.ok(pizza);
             } else {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, Constants.Pizza.MSG_PIZZA_NOT_FOUND);
+                return ResponseEntity.noContent().build();
             }
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, Constants.MSG_INTERNAL_SERVER_ERROR);
@@ -145,7 +145,7 @@ public class PizzaController {
             if(!lstPizzaDTO.isEmpty()){
                 return ResponseEntity.ok(lstPizzaDTO);
             } else {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, Constants.Pizza.MSG_NO_PIZZAS_FOUND);
+                return ResponseEntity.noContent().build();
             }
         } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, Constants.MSG_INTERNAL_SERVER_ERROR);
