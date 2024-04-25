@@ -15,3 +15,7 @@ Before: it Allow us to find elements before of some date
 Between: it Allow us to find elements between two dates
 Count: it allow us count elements
 In: it allow us to find elements from a list
+First: Get first element of the search result
+Top: Get top elements that we want to get like Top2, Top3 ...
+LessThan: Search elements less like something like prices less than 20 dollars
+GreaterThan: Search elements greater like something like quantity greater than 10 pieces
