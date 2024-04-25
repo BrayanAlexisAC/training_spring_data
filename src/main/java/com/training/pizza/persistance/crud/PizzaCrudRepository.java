@@ -35,4 +35,16 @@ public interface PizzaCrudRepository extends ListCrudRepository<PizzaModel, Inte
      */
     Optional<List<PizzaModel>> findAllByAvailableTrueAndDescriptionNotContainsIgnoreCase(String word);
 
+    /**
+     * Get Back Top 3 pizzas closest to a price
+     * @param basePrice Double
+     * @return Optional<List>
+     */
+    Optional<List<PizzaModel>> findTop3ByAvailableTrueAndPriceLessThanEqualOrderByPriceDesc(Double basePrice);
+
+    /**
+     * Get Back the Cheapest pizza in the database
+     * @return Optional<PizzaModel>
+     */
+    Optional<PizzaModel> findFirstByAvailableTrueOrderByPriceAsc();
 }

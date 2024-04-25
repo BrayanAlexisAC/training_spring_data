@@ -153,6 +153,32 @@ public class PizzaController {
 
     }
 
+    @GetMapping("/cheapest")
+    @Operation(
+            summary = "Get cheapest pizzas",
+            method = "GET",
+            operationId = "getCheapest"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "List of cheapest pizzas"),
+            @ApiResponse(responseCode = "204", description = "No content", content = @Content(schema = @Schema)),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(schema = @Schema))
+    })
+    public ResponseEntity<List<PizzaDTO>> getCheapest(
+            @Parameter(description = "Base price, Send 0 to Get cheapest pizza", example = "0.00", schema = @Schema(type = "number", format = "double"))
+            @RequestParam(defaultValue = "0.00") Double basePrice
+    ){
+        try{
+            var lstPizzaDTO = pizzaService.getCheapest(basePrice);
+            if(!lstPizzaDTO.isEmpty()){
+                return ResponseEntity.ok(lstPizzaDTO);
+            } else {
+                return ResponseEntity.noContent().build();
+            }
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, Constants.MSG_INTERNAL_SERVER_ERROR);
+        }
+    }
 
     @PostMapping("/add")
     @Operation(

@@ -54,6 +54,19 @@ public interface PizzaRepository {
     Optional<List<PizzaModel>> getByNotContainsDescription(String word);
 
     /**
+     * Get Top 3 Cheapest pizzas based on a price
+     * @param basePrice Double
+     * @return Optional<List>
+     */
+    Optional<List<PizzaModel>> getTop3Cheapest(Double basePrice);
+
+    /**
+     * Get the cheapest pizza in the database
+     * @return Optional<PizzaModel>
+     */
+    Optional<PizzaModel> getCheapest();
+
+    /**
      * Get true if exist pizza or false if not exist
      * @param idPizza int
      * @return boolean

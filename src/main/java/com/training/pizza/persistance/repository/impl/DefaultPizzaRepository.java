@@ -62,6 +62,16 @@ public class DefaultPizzaRepository implements PizzaRepository {
     }
 
     @Override
+    public Optional<List<PizzaModel>> getTop3Cheapest(Double basePrice) {
+        return crudRepository.findTop3ByAvailableTrueAndPriceLessThanEqualOrderByPriceDesc(basePrice);
+    }
+
+    @Override
+    public Optional<PizzaModel> getCheapest() {
+        return crudRepository.findFirstByAvailableTrueOrderByPriceAsc();
+    }
+
+    @Override
     public boolean existById(int idPizza) {
         return crudRepository.existsById(idPizza);
     }

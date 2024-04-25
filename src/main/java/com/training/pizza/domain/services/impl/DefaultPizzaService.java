@@ -65,6 +65,20 @@ public class DefaultPizzaService implements PizzaService {
     }
 
     @Override
+    public List<PizzaDTO> getCheapest(Double basePrice) {
+        if (Objects.nonNull(basePrice) && basePrice > 0){
+            var lstPizzasModel = repository.getTop3Cheapest(basePrice).orElse(Collections.emptyList());
+            return mapper.toLstPizzaDTO(lstPizzasModel);
+        } else {
+            var pizzaModel = repository.getCheapest();
+            if(pizzaModel.isPresent()){
+                return List.of(mapper.toPizzaDTO(pizzaModel.get()));
+            }
+        }
+        return Collections.emptyList();
+    }
+
+    @Override
     public boolean exist(int idPizza) {
         return repository.existById(idPizza);
     }
