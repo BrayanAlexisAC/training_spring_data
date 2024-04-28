@@ -2,10 +2,14 @@ package com.training.pizza.persistance.repository.impl;
 
 import com.training.pizza.persistance.crud.PizzaCrudRepository;
 import com.training.pizza.persistance.entity.PizzaModel;
+import com.training.pizza.persistance.paging.PizzaPagingAndSortingRepository;
 import com.training.pizza.persistance.repository.PizzaRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -24,6 +28,9 @@ public class DefaultPizzaRepository implements PizzaRepository {
     @Autowired
     private PizzaCrudRepository crudRepository;
 
+    @Autowired
+    private PizzaPagingAndSortingRepository pagingAndSortingRepository;
+
     @Override
     public Optional<List<PizzaModel>> getAllAvailable() {
         // Jdbc template uses native queries
@@ -39,6 +46,11 @@ public class DefaultPizzaRepository implements PizzaRepository {
     @Override
     public Optional<List<PizzaModel>> getAll() {
         return Optional.of(crudRepository.findAll());
+    }
+
+    public Page<PizzaModel> getAllPageable(int numPage, int numRows){
+        Pageable pageableInfo = PageRequest.of(numPage, numRows);
+        return pagingAndSortingRepository.findAll(pageableInfo);
     }
 
     @Override

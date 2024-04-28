@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -72,6 +73,33 @@ public class PizzaController {
                 return ResponseEntity.ok(lstPizzas);
             }
         } catch (ResponseStatusException e){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, Constants.MSG_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/all/pageable")
+    @Operation(
+            summary = "Get all pizzas pageable",
+            method = "GET",
+            operationId = "getAllPizzasPageable"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "List of all pizzas pageable"),
+            @ApiResponse(responseCode = "204", description = "No pizzas found", content = @Content(schema = @Schema())),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(schema = @Schema()))
+    })
+    public ResponseEntity<Page<PizzaDTO>> getPageable(
+            @Parameter (description = "Number pages required") @RequestParam(defaultValue = "0") int numPage,
+            @Parameter (description = "Number elements required") @RequestParam(defaultValue = "4") int numRows
+    ){
+        try {
+            var lstPizzas = pizzaService.getAllPageable(numPage, numRows);
+            if (lstPizzas.hasContent()) {
+                return ResponseEntity.ok(lstPizzas);
+            } else {
+                return ResponseEntity.noContent().build();
+            }
+        } catch (Exception e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, Constants.MSG_INTERNAL_SERVER_ERROR);
         }
     }

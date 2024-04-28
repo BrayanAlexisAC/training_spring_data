@@ -1,6 +1,7 @@
 package com.training.pizza.domain.services;
 
 import com.training.pizza.domain.dtos.PizzaDTO;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -23,6 +24,14 @@ public interface PizzaService {
      * @return List<PizzaDTO>
      */
     List<PizzaDTO> getAll();
+
+    /**
+     * Get Pizza List pageable for page num and num rows
+     * @param numPage int
+     * @param numRows int
+     * @return Page<PizzaDTO>
+     */
+    Page<PizzaDTO> getAllPageable(int numPage, int numRows);
 
     /**
      * Get back a pizza by ID

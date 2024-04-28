@@ -1,6 +1,7 @@
 package com.training.pizza.persistance.repository;
 
 import com.training.pizza.persistance.entity.PizzaModel;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,6 +25,14 @@ public interface PizzaRepository {
      * @return Optional<List>
      */
     Optional<List<PizzaModel>> getAll();
+
+    /**
+     * Get Pizzas for page and determinate elements
+     * @param numPage int
+     * @param numRows int
+     * @return Page<PizzaModel>
+     */
+    Page<PizzaModel> getAllPageable(int numPage, int numRows);
 
     /**
      * Get Pizza by ID

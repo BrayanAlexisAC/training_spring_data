@@ -8,6 +8,7 @@ import com.training.pizza.persistance.repository.PizzaRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -42,6 +43,12 @@ public class DefaultPizzaService implements PizzaService {
     public List<PizzaDTO> getAll() {
         List<PizzaModel> lstPizzasModel = repository.getAll().orElse(Collections.emptyList());
         return mapper.toLstPizzaDTO(lstPizzasModel);
+    }
+
+    @Override
+    public Page<PizzaDTO> getAllPageable(int numPage, int numRows) {
+        var pageablePizzaModel = repository.getAllPageable(numPage, numRows);
+        return pageablePizzaModel.map(pizzaModel -> mapper.toPizzaDTO(pizzaModel));
     }
 
     @Override
