@@ -29,9 +29,11 @@ public interface PizzaService {
      * Get Pizza List pageable for page num and num rows
      * @param numPage int
      * @param numRows int
+     * @param sortDirection String, Asc | Desc
+     * @param sortBy primitive array with fields
      * @return Page<PizzaDTO>
      */
-    Page<PizzaDTO> getAllPageable(int numPage, int numRows);
+    Page<PizzaDTO> getAllPageable(int numPage, int numRows, String sortDirection, String... sortBy);
 
     /**
      * Get back a pizza by ID

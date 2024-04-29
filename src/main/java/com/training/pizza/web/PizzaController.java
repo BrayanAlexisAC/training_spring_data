@@ -90,10 +90,16 @@ public class PizzaController {
     })
     public ResponseEntity<Page<PizzaDTO>> getPageable(
             @Parameter (description = "Number pages required") @RequestParam(defaultValue = "0") int numPage,
-            @Parameter (description = "Number elements required") @RequestParam(defaultValue = "4") int numRows
+            @Parameter (description = "Number elements required") @RequestParam(defaultValue = "4") int numRows,
+            @Parameter (description = "fields separated with ',' to sort pizzas", example = "price,name") @RequestParam(defaultValue = "price") String sortBy,
+            @Parameter (description = "Number elements required") @RequestParam(defaultValue = "ASC") String sortDirection
     ){
         try {
-            var lstPizzas = pizzaService.getAllPageable(numPage, numRows);
+            var lstPizzas = pizzaService.getAllPageable(
+                    numPage,
+                    numRows,
+                    sortDirection,
+                    sortBy.replaceAll(Constants.REGEX_SPACES, Constants.EMPTY).split(Constants.REGEX_COMA));
             if (lstPizzas.hasContent()) {
                 return ResponseEntity.ok(lstPizzas);
             } else {

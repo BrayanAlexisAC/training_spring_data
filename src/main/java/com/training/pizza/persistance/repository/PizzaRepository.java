@@ -2,6 +2,7 @@ package com.training.pizza.persistance.repository;
 
 import com.training.pizza.persistance.entity.PizzaModel;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,11 +29,10 @@ public interface PizzaRepository {
 
     /**
      * Get Pizzas for page and determinate elements
-     * @param numPage int
-     * @param numRows int
+     * @param pageable Pageable, with num pages, num rows and Sort with fields and direction
      * @return Page<PizzaModel>
      */
-    Page<PizzaModel> getAllPageable(int numPage, int numRows);
+    Page<PizzaModel> getAllPageable(Pageable pageable);
 
     /**
      * Get Pizza by ID

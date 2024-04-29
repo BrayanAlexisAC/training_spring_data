@@ -9,6 +9,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -46,8 +49,9 @@ public class DefaultPizzaService implements PizzaService {
     }
 
     @Override
-    public Page<PizzaDTO> getAllPageable(int numPage, int numRows) {
-        var pageablePizzaModel = repository.getAllPageable(numPage, numRows);
+    public Page<PizzaDTO> getAllPageable(int numPage, int numRows, String sortDirection, String... sortBy) {
+        var pageable = createPageable(numPage, numRows, sortDirection, sortBy);
+        var pageablePizzaModel = repository.getAllPageable(pageable);
         return pageablePizzaModel.map(pizzaModel -> mapper.toPizzaDTO(pizzaModel));
     }
 
@@ -107,5 +111,10 @@ public class DefaultPizzaService implements PizzaService {
         if (!Objects.nonNull(pizzaModel))
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Pizza with id: " + idPizza + " doesn't exist");
         return repository.delete(pizzaModel);
+    }
+
+    protected Pageable createPageable(int numPage, int numRows, String sortDirection, String... sortBy) {
+        Sort sort = Sort.by(Sort.Direction.fromString(sortDirection), sortBy);
+        return PageRequest.of(numPage, numRows, sort);
     }
 }

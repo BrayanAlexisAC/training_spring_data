@@ -1,6 +1,12 @@
 package com.training.pizza;
 
 public class Constants {
+    //////////////////////  REGEX  //////////////////////////
+    public static final String REGEX_SPACES = "\\s";
+    public static final String EMPTY = "";
+    public static final String REGEX_COMA = ",";
+
+    //////////////////////  ERRORS  //////////////////////////
     public static final String MSG_INTERNAL_SERVER_ERROR = "Internal error, please contact us or try later";
 
     public static class Pizza {

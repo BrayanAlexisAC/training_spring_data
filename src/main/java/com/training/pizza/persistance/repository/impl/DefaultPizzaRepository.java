@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -48,9 +47,8 @@ public class DefaultPizzaRepository implements PizzaRepository {
         return Optional.of(crudRepository.findAll());
     }
 
-    public Page<PizzaModel> getAllPageable(int numPage, int numRows){
-        Pageable pageableInfo = PageRequest.of(numPage, numRows);
-        return pagingAndSortingRepository.findAll(pageableInfo);
+    public Page<PizzaModel> getAllPageable(Pageable pageable){
+        return pagingAndSortingRepository.findByAvailableTrue(pageable);
     }
 
     @Override
