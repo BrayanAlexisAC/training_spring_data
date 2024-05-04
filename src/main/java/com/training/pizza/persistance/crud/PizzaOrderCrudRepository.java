@@ -1,7 +1,10 @@
 package com.training.pizza.persistance.crud;
 
 import com.training.pizza.persistance.entity.PizzaOrderModel;
+import com.training.pizza.persistance.projection.PizzaOrderSummary;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.ListCrudRepository;
+import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -37,4 +40,12 @@ public interface PizzaOrderCrudRepository extends ListCrudRepository<PizzaOrderM
      * @return Optional<List>
      */
     Optional<List<PizzaOrderModel>> findAllByCreatedDateBetween(LocalDateTime firstDate, LocalDateTime secondDate);
+
+    /**
+     * Get an order summary using database view
+     * @param id Integer, order identifier
+     * @return Optional<PizzaOrderSummary>
+     */
+    @Query(value = "SELECT * FROM pizza_order_summary WHERE idOrder = :id", nativeQuery = true)
+    Optional<PizzaOrderSummary> findOrderSummary(@Param("id") Integer id);
 }

@@ -1,6 +1,7 @@
 package com.training.pizza.domain.services.impl;
 
 import com.training.pizza.domain.dtos.OrderDTO;
+import com.training.pizza.domain.dtos.OrderSummaryDTO;
 import com.training.pizza.domain.enums.OrderMethod;
 import com.training.pizza.domain.mappers.OrderMapper;
 import com.training.pizza.domain.services.OrderService;
@@ -61,6 +62,12 @@ public class DefaultOrderService implements OrderService {
         }
 
         return mapper.toLstOrderDTO(lstOrdersModel);
+    }
+
+    @Override
+    public OrderSummaryDTO getSummary(Integer idOrder) {
+        var orderSummary = orderRepository.getSummary(idOrder).orElse(null);
+        return mapper.toOrderSummaryDTO(orderSummary);
     }
 
 }

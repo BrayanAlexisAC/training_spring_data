@@ -1,6 +1,7 @@
 package com.training.pizza.domain.services;
 
 import com.training.pizza.domain.dtos.OrderDTO;
+import com.training.pizza.domain.dtos.OrderSummaryDTO;
 import com.training.pizza.domain.enums.OrderMethod;
 
 import java.time.LocalDate;
@@ -34,4 +35,11 @@ public interface OrderService {
      * @return List<OrderDTO>
      */
     List<OrderDTO> getOldOrders(LocalDate firstDate, LocalDate secondDate);
+
+    /**
+     * Get an order summary with id
+     * @param idOrder Integer, order identifier
+     * @return OrderSummaryDTO
+     */
+    OrderSummaryDTO getSummary(Integer idOrder);
 }

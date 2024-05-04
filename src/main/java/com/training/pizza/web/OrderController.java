@@ -2,6 +2,7 @@ package com.training.pizza.web;
 
 import com.training.pizza.Constants;
 import com.training.pizza.domain.dtos.OrderDTO;
+import com.training.pizza.domain.dtos.OrderSummaryDTO;
 import com.training.pizza.domain.enums.OrderMethod;
 import com.training.pizza.domain.services.OrderService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -23,6 +24,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 @Tag(name = "Order Controller")
 @RestController
@@ -169,5 +171,32 @@ public class OrderController {
         }
     }
 
+    @GetMapping("/summary/{idOrder}")
+    @Operation(
+            summary = "Get order summary by ID",
+            method = "GET",
+            operationId = "getOrderSummary"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Order summary found"),
+            @ApiResponse(responseCode = "204", description = "No content"),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(schema = @Schema))
+    })
+    public ResponseEntity<OrderSummaryDTO> getSummary(
+            @Parameter(description = "Order ID", example = "123") @PathVariable("idOrder") Integer idOrder
+    ){
+        try {
+            var orderSummary = orderService.getSummary(idOrder);
+            if (Objects.nonNull(orderSummary)){
+                return ResponseEntity.ok(orderSummary);
+            } else {
+                return ResponseEntity.noContent().build();
+            }
+        } catch (Exception e) {
+            log.error("Error in service orders/summary/{idOrder} cause: {}, message: {}, stacktrace: {}",
+                    e.getCause(), e.getMessage(), Arrays.toString(e.getStackTrace()));
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, Constants.MSG_INTERNAL_SERVER_ERROR);
+        }
+    }
 
 }

@@ -1,6 +1,7 @@
 package com.training.pizza.persistance.repository;
 
 import com.training.pizza.persistance.entity.PizzaOrderModel;
+import com.training.pizza.persistance.projection.PizzaOrderSummary;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -43,4 +44,11 @@ public interface OrderRepository {
      * @return Optional<LIst>
      */
     Optional<List<PizzaOrderModel>> getOrdersByRange(LocalDate firstDate, LocalDate secondDate);
+
+    /**
+     * Get an order summary
+     * @param idOrder Integer, order identifier
+     * @return Optional<PizzaOrderSummary>
+     */
+    Optional<PizzaOrderSummary> getSummary(Integer idOrder);
 }

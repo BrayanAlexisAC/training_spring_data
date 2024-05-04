@@ -2,6 +2,7 @@ package com.training.pizza.persistance.repository.impl;
 
 import com.training.pizza.persistance.crud.PizzaOrderCrudRepository;
 import com.training.pizza.persistance.entity.PizzaOrderModel;
+import com.training.pizza.persistance.projection.PizzaOrderSummary;
 import com.training.pizza.persistance.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -40,6 +41,11 @@ public class DefaultOrderRepository implements OrderRepository {
     @Override
     public Optional<List<PizzaOrderModel>> getOrdersByRange(LocalDate firstDate, LocalDate secondDate) {
         return crudRepository.findAllByCreatedDateBetween(firstDate.atTime(0,0), secondDate.atTime(0,0));
+    }
+
+    @Override
+    public Optional<PizzaOrderSummary> getSummary(Integer idOrder) {
+        return crudRepository.findOrderSummary(idOrder);
     }
 
 }
