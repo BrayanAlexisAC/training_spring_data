@@ -11,21 +11,22 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Arrays;
 import java.util.Objects;
 
 @Tag(name = "Customer Controller")
 @RestController
 @RequestMapping("/customer")
 public class CustomerController {
+    private Logger log = LoggerFactory.getLogger(CustomerController.class);
 
     @Autowired
     private CustomerService customerService;
@@ -58,6 +59,28 @@ public class CustomerController {
                 }
             }
         } catch (Exception e) {
+            log.error("Error in service /customer cause: {}, message: {}, stacktrace: {}",
+                    e.getCause(), e.getMessage(), Arrays.toString(e.getStackTrace()));
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, Constants.MSG_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PutMapping("/update/{idCustomer}")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public void update(
+            @PathVariable() String idCustomer,
+            @RequestParam(required = false, defaultValue = Constants.EMPTY) String name,
+            @RequestParam(required = false, defaultValue = Constants.EMPTY) String address,
+            @RequestParam(required = false, defaultValue = Constants.EMPTY) String email,
+            @RequestParam(required = false, defaultValue = Constants.EMPTY) String phoneNumber
+    ) {
+        try {
+            customerService.update(new CustomerDTO(idCustomer, name, address, email, phoneNumber));
+        } catch (Exception e) {
+            log.error("Error in service customer/update/{idCustomer} cause: {}, message: {}, stacktrace: {}",
+                    e.getCause(), e.getMessage(), Arrays.toString(e.getStackTrace()));
+            if (e instanceof ResponseStatusException)
+                throw e;
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, Constants.MSG_INTERNAL_SERVER_ERROR);
         }
     }

@@ -13,4 +13,9 @@ public interface CustomerService {
      */
     CustomerDTO get(String id, String email, String name);
 
+    /**
+     * Update customer information
+     * @param customerDTO CustomerDTO, Object with fields to update
+     */
+    boolean update(CustomerDTO customerDTO);
 }
