@@ -1,19 +1,19 @@
 package com.training.pizza.persistance.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.training.pizza.persistance.audit.AuditableModel;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @Table(name = "pizza_customer")
+@EntityListeners(AuditingEntityListener.class)
 @Getter
 @Setter
 @NoArgsConstructor
-public class PizzaCustomerModel {
+public class PizzaCustomerModel extends AuditableModel {
 
     @Id
     @Column(name = "id_customer", nullable = false, unique = true, length = 15)

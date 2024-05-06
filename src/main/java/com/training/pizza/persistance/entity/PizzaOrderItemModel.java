@@ -1,17 +1,20 @@
 package com.training.pizza.persistance.entity;
 
+import com.training.pizza.persistance.audit.AuditableModel;
 import com.training.pizza.persistance.entity.composePK.PizzaOrderItemPK;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @Table(name = "pizza_order_item")
+@EntityListeners(AuditingEntityListener.class)
 @Getter
 @Setter
 @NoArgsConstructor
-public class PizzaOrderItemModel {
+public class PizzaOrderItemModel extends AuditableModel {
 
     @EmbeddedId
     private PizzaOrderItemPK composePK;
