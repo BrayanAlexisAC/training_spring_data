@@ -1,6 +1,7 @@
 package com.training.pizza.persistance.entity;
 
 import com.training.pizza.persistance.audit.AuditableModel;
+import com.training.pizza.persistance.audit.listeners.AuditModelsListener;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,7 +13,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "pizza_order")
-@EntityListeners(AuditingEntityListener.class)
+@EntityListeners({AuditingEntityListener.class, AuditModelsListener.class})
 @Getter
 @Setter
 @NoArgsConstructor
