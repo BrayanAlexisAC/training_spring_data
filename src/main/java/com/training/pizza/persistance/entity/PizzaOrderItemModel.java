@@ -1,13 +1,21 @@
 package com.training.pizza.persistance.entity;
 
+import com.training.pizza.persistance.audit.AuditableModel;
+import com.training.pizza.persistance.audit.listeners.AuditModelsListener;
 import com.training.pizza.persistance.entity.composePK.PizzaOrderItemPK;
 import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @Table(name = "pizza_order_item")
+@EntityListeners({AuditingEntityListener.class, AuditModelsListener.class})
+@Getter
+@Setter
 @NoArgsConstructor
-public class PizzaOrderItemModel {
+public class PizzaOrderItemModel extends AuditableModel {
 
     @EmbeddedId
     private PizzaOrderItemPK composePK;
@@ -29,51 +37,4 @@ public class PizzaOrderItemModel {
     @JoinColumn(name = "id_pizza", referencedColumnName = "id_pizza", insertable = false, updatable = false)
     private PizzaModel pizza;
 
-    public PizzaOrderItemPK getComposePK() {
-        return composePK;
-    }
-
-    public void setComposePK(PizzaOrderItemPK composePK) {
-        this.composePK = composePK;
-    }
-
-    public Integer getIdItem() {
-        return idItem;
-    }
-
-    public void setIdItem(Integer idItem) {
-        this.idItem = idItem;
-    }
-
-    public Double getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(Double quantity) {
-        this.quantity = quantity;
-    }
-
-    public Double getPrice() {
-        return price;
-    }
-
-    public void setPrice(Double price) {
-        this.price = price;
-    }
-
-    public PizzaOrderModel getOrder() {
-        return order;
-    }
-
-    public void setOrder(PizzaOrderModel order) {
-        this.order = order;
-    }
-
-    public PizzaModel getPizza() {
-        return pizza;
-    }
-
-    public void setPizza(PizzaModel pizza) {
-        this.pizza = pizza;
-    }
 }

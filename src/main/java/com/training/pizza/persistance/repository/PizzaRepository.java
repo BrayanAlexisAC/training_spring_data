@@ -1,6 +1,8 @@
 package com.training.pizza.persistance.repository;
 
 import com.training.pizza.persistance.entity.PizzaModel;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,6 +26,13 @@ public interface PizzaRepository {
      * @return Optional<List>
      */
     Optional<List<PizzaModel>> getAll();
+
+    /**
+     * Get Pizzas for page and determinate elements
+     * @param pageable Pageable, with num pages, num rows and Sort with fields and direction
+     * @return Page<PizzaModel>
+     */
+    Page<PizzaModel> getAllPageable(Pageable pageable);
 
     /**
      * Get Pizza by ID
@@ -52,6 +61,19 @@ public interface PizzaRepository {
      * @return Optional
      */
     Optional<List<PizzaModel>> getByNotContainsDescription(String word);
+
+    /**
+     * Get Top 3 Cheapest pizzas based on a price
+     * @param basePrice Double
+     * @return Optional<List>
+     */
+    Optional<List<PizzaModel>> getTop3Cheapest(Double basePrice);
+
+    /**
+     * Get the cheapest pizza in the database
+     * @return Optional<PizzaModel>
+     */
+    Optional<PizzaModel> getCheapest();
 
     /**
      * Get true if exist pizza or false if not exist

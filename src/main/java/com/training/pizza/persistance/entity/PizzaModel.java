@@ -1,13 +1,20 @@
 package com.training.pizza.persistance.entity;
 
+import com.training.pizza.persistance.audit.AuditableModel;
+import com.training.pizza.persistance.audit.listeners.AuditModelsListener;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @Table(name = "PIZZA")
-public class PizzaModel {
+@EntityListeners({AuditingEntityListener.class, AuditModelsListener.class})
+@Getter
+@Setter
+@NoArgsConstructor
+public class PizzaModel extends AuditableModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,59 +39,4 @@ public class PizzaModel {
     @Column(nullable = false, columnDefinition = "BIT")
     private Boolean available;
 
-    public Integer getIdPizza() {
-        return idPizza;
-    }
-
-    public void setIdPizza(Integer idPizza) {
-        this.idPizza = idPizza;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Double getPrice() {
-        return price;
-    }
-
-    public void setPrice(Double price) {
-        this.price = price;
-    }
-
-    public Boolean getVegetarian() {
-        return vegetarian;
-    }
-
-    public void setVegetarian(Boolean vegetarian) {
-        this.vegetarian = vegetarian;
-    }
-
-    public Boolean getVegan() {
-        return vegan;
-    }
-
-    public void setVegan(Boolean vegan) {
-        this.vegan = vegan;
-    }
-
-    public Boolean getAvailable() {
-        return available;
-    }
-
-    public void setAvailable(Boolean available) {
-        this.available = available;
-    }
 }

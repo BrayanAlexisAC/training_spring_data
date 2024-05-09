@@ -1,6 +1,7 @@
 package com.training.pizza.domain.services;
 
 import com.training.pizza.domain.dtos.PizzaDTO;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -25,6 +26,16 @@ public interface PizzaService {
     List<PizzaDTO> getAll();
 
     /**
+     * Get Pizza List pageable for page num and num rows
+     * @param numPage int
+     * @param numRows int
+     * @param sortDirection String, Asc | Desc
+     * @param sortBy primitive array with fields
+     * @return Page<PizzaDTO>
+     */
+    Page<PizzaDTO> getAllPageable(int numPage, int numRows, String sortDirection, String... sortBy);
+
+    /**
      * Get back a pizza by ID
      * @param idPizza int
      * @return PizzaDTO
@@ -47,6 +58,13 @@ public interface PizzaService {
     List<PizzaDTO> getByDescription(String word, boolean isContains);
 
     /**
+     * Get a List of cheapest pizzas
+     * @param basePrice Double
+     * @return List<PizzaDTO>
+     */
+    List<PizzaDTO> getCheapest(Double basePrice);
+
+    /**
      * Get true if exist pizza with ID or false if not exist
      * @param idPizza int
      * @return boolean
@@ -54,7 +72,7 @@ public interface PizzaService {
     boolean exist(int idPizza);
 
     /**
-     * Save or Update information about izza
+     * Save or Update information about pizza
      * @param pizza PizzaDTO
      * @param exist boolean
      * @return PizzaDTO

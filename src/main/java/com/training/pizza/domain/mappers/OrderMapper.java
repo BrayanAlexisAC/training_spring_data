@@ -1,7 +1,9 @@
 package com.training.pizza.domain.mappers;
 
 import com.training.pizza.domain.dtos.OrderDTO;
+import com.training.pizza.domain.dtos.OrderSummaryDTO;
 import com.training.pizza.persistance.entity.PizzaOrderModel;
+import com.training.pizza.persistance.projection.PizzaOrderSummary;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
@@ -22,4 +24,12 @@ public interface OrderMapper {
 
     List<OrderDTO> toLstOrderDTO(List<PizzaOrderModel> lstOrderModel);
 
+    @Mappings({
+            @Mapping(target = "idOrder", expression = "java(orderSummary.getIdOrder())"),
+            @Mapping(target = "customerName", expression = "java(orderSummary.getCustomerName())"),
+            @Mapping(target = "createdDate", expression = "java(orderSummary.getCreatedDate())"),
+            @Mapping(target = "total", expression = "java(orderSummary.getTotal())"),
+            @Mapping(target = "pizzaNames", expression = "java(orderSummary.getPizzaNames())")
+    })
+    OrderSummaryDTO toOrderSummaryDTO(PizzaOrderSummary orderSummary);
 }

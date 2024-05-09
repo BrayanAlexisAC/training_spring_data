@@ -1,7 +1,6 @@
 package com.training.pizza.web;
 
 import com.training.pizza.Constants;
-import com.training.pizza.CustomExceptions;
 import com.training.pizza.domain.dtos.PizzaDTO;
 import com.training.pizza.domain.services.PizzaService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -13,9 +12,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Objects;
@@ -28,7 +29,6 @@ public class PizzaController {
     @Autowired
     PizzaService pizzaService;
 
-    @ExceptionHandler(CustomExceptions.class) // This annotation works like global Exception for all endpoint in this controller
     @GetMapping("/all")
     @Operation(
             summary = "Get all pizzas",
@@ -45,7 +45,7 @@ public class PizzaController {
     ){
         List<PizzaDTO> lstPizzas = onlyAvailable ? pizzaService.getAllAvailable() : pizzaService.getAll();
         if (lstPizzas.isEmpty()){
-            throw new CustomExceptions(HttpStatus.NOT_FOUND, Constants.Pizza.MSG_NO_PIZZAS_FOUND);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, Constants.Pizza.MSG_NO_PIZZAS_FOUND);
         } else {
             return ResponseEntity.ok(lstPizzas);
         }
@@ -68,12 +68,45 @@ public class PizzaController {
         try {
             List<PizzaDTO> lstPizzas = pizzaService.getAllAvailableOrderByPrice();
             if (lstPizzas.isEmpty()){
-                throw new CustomExceptions(HttpStatus.NOT_FOUND, Constants.Pizza.MSG_NO_PIZZAS_FOUND);
+                return ResponseEntity.noContent().build();
             } else {
                 return ResponseEntity.ok(lstPizzas);
             }
-        } catch (CustomExceptions e){
-            throw new CustomExceptions(HttpStatus.INTERNAL_SERVER_ERROR, Constants.MSG_INTERNAL_SERVER_ERROR);
+        } catch (ResponseStatusException e){
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, Constants.MSG_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/all/pageable")
+    @Operation(
+            summary = "Get all pizzas pageable",
+            method = "GET",
+            operationId = "getAllPizzasPageable"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "List of all pizzas pageable"),
+            @ApiResponse(responseCode = "204", description = "No pizzas found", content = @Content(schema = @Schema())),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(schema = @Schema()))
+    })
+    public ResponseEntity<Page<PizzaDTO>> getPageable(
+            @Parameter (description = "Number pages required") @RequestParam(defaultValue = "0") int numPage,
+            @Parameter (description = "Number elements required") @RequestParam(defaultValue = "4") int numRows,
+            @Parameter (description = "fields separated with ',' to sort pizzas", example = "price,name") @RequestParam(defaultValue = "price") String sortBy,
+            @Parameter (description = "Number elements required") @RequestParam(defaultValue = "ASC") String sortDirection
+    ){
+        try {
+            var lstPizzas = pizzaService.getAllPageable(
+                    numPage,
+                    numRows,
+                    sortDirection,
+                    sortBy.replaceAll(Constants.REGEX_SPACES, Constants.EMPTY).split(Constants.REGEX_COMA));
+            if (lstPizzas.hasContent()) {
+                return ResponseEntity.ok(lstPizzas);
+            } else {
+                return ResponseEntity.noContent().build();
+            }
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, Constants.MSG_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -95,7 +128,7 @@ public class PizzaController {
         if (Objects.nonNull(pizza)){
             return ResponseEntity.ok(pizza);
         } else {
-            throw new CustomExceptions(HttpStatus.NOT_FOUND, Constants.Pizza.MSG_PIZZA_NOT_FOUND);
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, Constants.Pizza.MSG_PIZZA_NOT_FOUND);
         }
     }
 
@@ -118,10 +151,10 @@ public class PizzaController {
             if (Objects.nonNull(pizza)) {
                 return ResponseEntity.ok(pizza);
             } else {
-                throw new CustomExceptions(HttpStatus.NOT_FOUND, Constants.Pizza.MSG_PIZZA_NOT_FOUND);
+                return ResponseEntity.noContent().build();
             }
         } catch (Exception e) {
-            throw new CustomExceptions(HttpStatus.INTERNAL_SERVER_ERROR, Constants.MSG_INTERNAL_SERVER_ERROR);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, Constants.MSG_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -146,14 +179,40 @@ public class PizzaController {
             if(!lstPizzaDTO.isEmpty()){
                 return ResponseEntity.ok(lstPizzaDTO);
             } else {
-                throw new CustomExceptions(HttpStatus.NOT_FOUND, Constants.Pizza.MSG_NO_PIZZAS_FOUND);
+                return ResponseEntity.noContent().build();
             }
         } catch (Exception e) {
-            throw new CustomExceptions(HttpStatus.INTERNAL_SERVER_ERROR, Constants.MSG_INTERNAL_SERVER_ERROR);
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, Constants.MSG_INTERNAL_SERVER_ERROR);
         }
 
     }
 
+    @GetMapping("/cheapest")
+    @Operation(
+            summary = "Get cheapest pizzas",
+            method = "GET",
+            operationId = "getCheapest"
+    )
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "List of cheapest pizzas"),
+            @ApiResponse(responseCode = "204", description = "No content", content = @Content(schema = @Schema)),
+            @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(schema = @Schema))
+    })
+    public ResponseEntity<List<PizzaDTO>> getCheapest(
+            @Parameter(description = "Base price, Send 0 to Get cheapest pizza", example = "0.00", schema = @Schema(type = "number", format = "double"))
+            @RequestParam(defaultValue = "0.00") Double basePrice
+    ){
+        try{
+            var lstPizzaDTO = pizzaService.getCheapest(basePrice);
+            if(!lstPizzaDTO.isEmpty()){
+                return ResponseEntity.ok(lstPizzaDTO);
+            } else {
+                return ResponseEntity.noContent().build();
+            }
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, Constants.MSG_INTERNAL_SERVER_ERROR);
+        }
+    }
 
     @PostMapping("/add")
     @Operation(
@@ -175,7 +234,7 @@ public class PizzaController {
             if (pizzaExist){
                 return new ResponseEntity<>(pizzaService.createAndUpdate(pizza, true), HttpStatus.CREATED);
             } else {
-                throw new CustomExceptions(HttpStatus.CONFLICT, Constants.Pizza.MSG_PIZZA_NOT_FOUND);
+                throw new ResponseStatusException(HttpStatus.CONFLICT, Constants.Pizza.MSG_PIZZA_NOT_FOUND);
             }
         } else {
             return new ResponseEntity<>(pizzaService.createAndUpdate(pizza, false), HttpStatus.CREATED);
